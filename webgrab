@@ -1,0 +1,30 @@
+#!/bin/bash
+
+usage="$(basename "$0") [-h] [-t target] -- script to crawl websites and grab everything
+where:
+    -h  show this help
+    -t  set the target URL"
+
+if [ $# == 0 ]
+then
+  echo "$usage"
+  exit
+fi
+
+while getopts ':ht:' option; do
+  case "$option" in
+    h) echo "$usage"
+       exit
+       ;;
+    t) wget --no-clobber --convert-links --random-wait -r -p -E -e robots=off -U mozilla $OPTARG
+       ;;
+    :) printf "\nmissing argument for -%s\n\n\n" "$OPTARG" >&2
+       echo "$usage" >&2
+       exit 1
+       ;;
+   \?) printf "\nillegal option: -%s\n\n\n" "$OPTARG" >&2
+       echo "$usage" >&2
+       exit 1
+       ;;
+  esac
+done
